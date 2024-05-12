@@ -20,7 +20,7 @@ const Navigation: React.FC = () => {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-            <div className={"default-page-height"}>
+            <div className={"default-page-height my-3"}>
                 <Container>
                     <Outlet/>
                 </Container>
