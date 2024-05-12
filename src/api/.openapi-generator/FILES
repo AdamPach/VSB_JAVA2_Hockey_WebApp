@@ -1,0 +1,14 @@
+.openapi-generator-ignore
+apis/MatchControllerApi.ts
+apis/PlayerControllerApi.ts
+apis/TeamControllerApi.ts
+apis/index.ts
+index.ts
+models/MatchDetail.ts
+models/Player.ts
+models/Team.ts
+models/UpdateMatch.ts
+models/UpdatePlayer.ts
+models/UpdateTeam.ts
+models/index.ts
+runtime.ts
