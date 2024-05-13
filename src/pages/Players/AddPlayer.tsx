@@ -18,12 +18,10 @@ const AddPlayer: React.FC = () => {
         newPlayer.birthDate = new Date();
 
         try {
-            await api.createPlayer({updatePlayer: newPlayer});
+            const player = await api.createPlayer({updatePlayer: newPlayer});
+            navigate("/players/" + player.id);
         } catch (error) {
             console.log(error);
-        }
-        finally {
-           navigate("/players");
         }
     }
 

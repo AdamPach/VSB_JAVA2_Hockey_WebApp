@@ -4,9 +4,10 @@ import {Form} from "react-bootstrap";
 
 type AddPlayerToTeamProps = {
   playerId: number;
+  refreshPlayer: () => void;
 };
 
-const AddPlayerToTeam: React.FC<AddPlayerToTeamProps> = ({playerId}) => {
+const AddPlayerToTeam: React.FC<AddPlayerToTeamProps> = ({playerId, refreshPlayer}) => {
 
     const [teams, setTeams] = useState<Team[]>([]);
 
@@ -37,7 +38,7 @@ const AddPlayerToTeam: React.FC<AddPlayerToTeamProps> = ({playerId}) => {
             console.log(error);
         }
         finally {
-            window.location.reload();
+            refreshPlayer();
         }
     }
 

@@ -23,6 +23,10 @@ const Navigation: React.FC = () => {
                                 <Link to="/players" className={"dropdown-item"}>Players</Link>
                                 <Link to="/players/add" className={"dropdown-item"}>Add player</Link>
                             </NavDropdown>
+                            <NavDropdown title={"Matches"} id={"basic-nav-dropdown"}>
+                                <Link to="/matches" className={"dropdown-item"}>Matches</Link>
+                                <Link to="/matches/add" className={"dropdown-item"}>Add match</Link>
+                            </NavDropdown>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

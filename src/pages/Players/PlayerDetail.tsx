@@ -1,6 +1,6 @@
 import {Player, PlayerControllerApi, Team, TeamControllerApi} from "../../api";
 import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import AddPlayerToTeam from "../../components/AddPlayerToTeam/AddPlayerToTeam.tsx";
 
 const PlayerDetail: React.FC = () => {
@@ -10,26 +10,36 @@ const PlayerDetail: React.FC = () => {
     const [player, setPlayer] = useState<Player>();
     const [team, setTeam] = useState<Team>();
 
-    useEffect(() => {
+    const navigate = useNavigate();
+
+    const refreshPlayer = () => {
         const api = new PlayerControllerApi();
 
         api.getPlayer({playerId: parseInt(playerId!)})
             .then((response) => {
                 setPlayer(response);
-
-                if(!response.teamId) {
-                    return;
-                }
-
-                const teamApi = new TeamControllerApi();
-
-                return teamApi.getTeamById({teamId: response.teamId!});
-            }).then((response) => {
-                setTeam(response);
-            })
-            .catch((error) => console.log(error));
-
+            }).catch((error) => console.log(error));
+    }
+    
+    useEffect(() => {
+        refreshPlayer();
     }, [playerId]);
+
+    useEffect(() => {
+        if(!player) return;
+
+        if(player.teamId === undefined) {
+            setTeam(undefined);
+            return;
+        }
+
+        const api = new TeamControllerApi()
+
+        api.getTeamById({teamId: player.teamId!})
+            .then((response) => {
+                setTeam(response);
+            }).catch((error) => console.log(error));
+    }, [player]);
 
     const leaveTeam = async (teamId: number, playerId: number) => {
         const api = new TeamControllerApi();
@@ -40,7 +50,19 @@ const PlayerDetail: React.FC = () => {
             console.log(error);
         }
         finally {
-            window.location.reload();
+            setPlayer({...player, teamId: undefined});
+        }
+    }
+
+    const deletePlayer = async () => {
+        const api = new PlayerControllerApi();
+
+        try {
+            await api.deletePlayer({playerId: player!.id!});
+        } catch (error) {
+            console.log(error);
+        } finally {
+            navigate("/players");
         }
     }
 
@@ -60,8 +82,14 @@ const PlayerDetail: React.FC = () => {
                             <button className={"btn btn-warning"} onClick={async () => leaveTeam(team.id!, player.id!)}>Leave team</button>
                         </div>
                     ) : (
-                        <AddPlayerToTeam playerId={player.id!}/>
+                        <AddPlayerToTeam
+                            refreshPlayer={refreshPlayer}
+                            playerId={player.id!}/>
                     )}
+
+                    <button
+                        className={"btn btn-danger my-3 d-block"}
+                        onClick={async () => await deletePlayer() }>Delete Player</button>
                 </div>
             )}
         </div>
