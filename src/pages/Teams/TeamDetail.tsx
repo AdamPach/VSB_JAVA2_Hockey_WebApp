@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {MatchDetail, Player, Team, TeamControllerApi} from "../../api";
 import PlayerCard from "../../components/PlayerCard/PlayerCard.tsx";
 import MatchCard from "../../components/MatchCard/MatchCard.tsx";
@@ -9,6 +9,8 @@ const TeamDetail: React.FC = () => {
     const [team, setTeam] = useState<Team>();
     const [players, setPlayers] = useState<Player[]>([]);
     const [matches, setMatches] = useState<MatchDetail[]>([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const api = new TeamControllerApi();
@@ -33,6 +35,21 @@ const TeamDetail: React.FC = () => {
 
     }, [teamId]);
 
+    const deleteTeam = async (teamId: number) => {
+        const api = new TeamControllerApi();
+
+        try {
+            await api.deleteTeam({teamId: teamId});
+        } catch (error) {
+            console.log(error);
+        }
+        finally {
+            navigate("/teams");
+        }
+
+    }
+
+
     return (
         <div>
             {team && (
@@ -44,6 +61,8 @@ const TeamDetail: React.FC = () => {
                     <p>{team.city}</p>
                     <h4 className={"my-3"}>Established</h4>
                     <p>{team.establishmentDate?.toDateString()}</p>
+
+                    <button className={"btn-danger btn"} onClick={async () => deleteTeam(team.id!)}>Delete team</button>
                 </div>
             )}
 
@@ -54,6 +73,7 @@ const TeamDetail: React.FC = () => {
             {matches.length > 0 && <h2 className={"border-1 border-bottom my-3"}>Matches</h2>}
 
             {matches.map((match) => <MatchCard match={match} key={match.id}/>)}
+
 
         </div>
     );

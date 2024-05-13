@@ -9,13 +9,13 @@ type PlayerCardProps = {
 const PlayerCard: React.FC<PlayerCardProps> = ({ player }) => {
 
     return (
-        <div>
+        <div className={"my-3"}>
             <Card>
                 <CardHeader>
                     <CardTitle>{player.firstName} {player.lastName}</CardTitle>
                 </CardHeader>
                 <CardBody>
-                    <Link className={"btn btn-success"} to={"#"}>Check the player</Link>
+                    <Link className={"btn btn-success"} to={`/players/${player.id}`}>Check the player</Link>
                 </CardBody>
             </Card>
         </div>
